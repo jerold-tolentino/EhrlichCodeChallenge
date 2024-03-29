@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ehrlich.Api.Features.Pizza;
+namespace Ehrlich.Api.Features.Pizzas;
 
 
 [ApiController]

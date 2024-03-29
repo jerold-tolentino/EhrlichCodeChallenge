@@ -1,13 +1,9 @@
-﻿using Ehrlich.Api.Features.Pizza.ImportPizzas;
-using Ehrlich.Api.Features.PizzaTypes.ImportPizzaType;
+﻿using Ehrlich.Api.Features.Pizzas.ImportPizzas;
 using Ehrlich.Api.Shared.Enumerations;
 using Microsoft.AspNetCore.Mvc;
 using nietras.SeparatedValues;
-using System.Formats.Asn1;
-using System.Reflection.PortableExecutable;
 
-namespace Ehrlich.Api.Features.Pizza;
-
+namespace Ehrlich.Api.Features.Pizzas;
 
 public partial class PizzasController : ControllerBase
 {
@@ -28,7 +24,14 @@ public partial class PizzasController : ControllerBase
         var command = new ImportPizzasCommand(records);
         var result = await _sender.Send(command);
 
-        return Ok(result);
+        if (result.IsFailure)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                detail: result.Error.Message);
+        }
+
+        return Ok(result.Value);
     }
 
     private Task<List<ImportPizzasRequest>> GetRecords(MemoryStream memoryStream)
@@ -44,14 +47,13 @@ public partial class PizzasController : ControllerBase
                     continue;
                 }
 
-                var model = new ImportPizzasRequest
-                {
-                    UniqueCode = row[0].ToString(),
-                    Type = row[1].ToString(),
-                    Size = size,
-                    Price = Convert.ToDecimal(row[3].ToString()),
-                };
-                records.Add(model);
+                var request = new ImportPizzasRequest(
+                    UniqueCode: row[0].ToString(),
+                    PizzaTypeUniqueCode: row[1].ToString(),
+                    Size: size,
+                    Price: Convert.ToDecimal(row[3].ToString()));
+
+                records.Add(request);
             }
         }
         return Task.FromResult(records);

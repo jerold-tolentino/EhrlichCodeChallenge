@@ -1,6 +1,6 @@
 ﻿using Ehrlich.Api.Shared;
 
-namespace Ehrlich.Api.Features.Pizza.ImportPizzas;
+namespace Ehrlich.Api.Features.Pizzas.ImportPizzas;
 
 public record PizzaErrors(string Code, string Message) : Error(Code, Message)
 {
