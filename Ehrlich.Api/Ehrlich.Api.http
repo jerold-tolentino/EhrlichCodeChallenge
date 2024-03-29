@@ -1,0 +1,9 @@
+@Ehrlich.Api_HostAddress = http://localhost:5051
+
+GET {{Ehrlich.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{Ehrlich.Api_HostAddress}}/api/pizzatype/
+Content-Type: "multipart/form-data"
