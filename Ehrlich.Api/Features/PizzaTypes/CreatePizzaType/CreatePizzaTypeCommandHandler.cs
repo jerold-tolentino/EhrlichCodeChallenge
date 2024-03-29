@@ -1,7 +1,5 @@
-﻿using Azure.Core;
-using Ehrlich.Api.Database;
+﻿using Ehrlich.Api.Database;
 using Ehrlich.Api.Entities;
-using Ehrlich.Api.Features.PizzaTypes.ImportPizzaTypes;
 using Ehrlich.Api.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +24,7 @@ public class CreatePizzaTypeCommandHandler : IRequestHandler<CreatePizzaTypeComm
 
         if (pizzaType is not null)
         {
-            return Result.Failure<CreatePizzaTypeResponse>(PizzaTypeErrors.PizzaTypeAlreadyExist);
+            return Result.Failure<CreatePizzaTypeResponse>(PizzaTypeErrors.AlreadyExist);
         }
 
         pizzaType = new PizzaType
