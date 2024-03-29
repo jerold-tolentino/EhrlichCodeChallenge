@@ -1,11 +1,15 @@
 ﻿using Ehrlich.Api.Database;
 using Ehrlich.Api.Entities;
+using Ehrlich.Api.Features.Pizza.ImportPizzas;
+using Ehrlich.Api.Features.PizzaTypes.ImportPizzaTypes;
+using Ehrlich.Api.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Pipes;
 
 namespace Ehrlich.Api.Features.PizzaTypes.ImportPizzaType;
 
-public class ImportPizzaTypesCommandHandler : IRequestHandler<ImportPizzaTypesCommand, int>
+public class ImportPizzaTypesCommandHandler : IRequestHandler<ImportPizzaTypesCommand, Result<ImpotPizzaTypesResponse>>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -14,29 +18,39 @@ public class ImportPizzaTypesCommandHandler : IRequestHandler<ImportPizzaTypesCo
         _dbContext = dbContext;
     }
 
-    public async Task<int> Handle(
+    public async Task<Result<ImpotPizzaTypesResponse>> Handle(
         ImportPizzaTypesCommand request,
         CancellationToken cancellationToken)
     {
+        var pizzaTypes = new List<PizzaType>();
         foreach (var type in request.PizzaTypes)
         {
-            var pizzaType = await _dbContext.PizzaTypes.FindAsync(type.Id);
+            var pizzaType = await _dbContext.PizzaTypes.FirstOrDefaultAsync(p => p.UniqueCode == type.UniqueCode);
 
             if (pizzaType is not null)
             {
+                pizzaType.Name = type.Name;
+                pizzaType.Category = await GetCategoryAsync(type.Category);
+                pizzaType.Ingredients = await GetIngredientsAsync(type.Ingredients);
+                pizzaTypes.Add(pizzaType);
                 continue;
             }
 
             var newPizzaType = new PizzaType
             {
                 Name = type.Name,
+                UniqueCode = type.UniqueCode,
                 Category = await GetCategoryAsync(type.Category),
                 Ingredients = await GetIngredientsAsync(type.Ingredients)
             };
-            _dbContext.PizzaTypes.Add(newPizzaType);
+            pizzaTypes.Add(newPizzaType);
+            await _dbContext.PizzaTypes.AddAsync(newPizzaType);
         }
-        _dbContext.SaveChanges();
-        return request.PizzaTypes.Count;
+
+        await _dbContext.SaveChangesAsync();
+
+        var response = new ImpotPizzaTypesResponse(pizzaTypes);
+        return Result.Success<ImpotPizzaTypesResponse>(response);
     }
 
     private async Task<PizzaCategory> GetCategoryAsync(string categoryName)

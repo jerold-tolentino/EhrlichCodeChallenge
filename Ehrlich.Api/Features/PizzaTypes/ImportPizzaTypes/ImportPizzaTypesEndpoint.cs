@@ -8,7 +8,7 @@ using System.Reflection.PortableExecutable;
 namespace Ehrlich.Api.Features.PizzaTypes;
 
 
-public partial class PizzaTypeController : ControllerBase
+public partial class PizzaTypesController : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> ImportPizzaTypes([FromForm(Name = "File")] IFormFile file)
@@ -27,24 +27,29 @@ public partial class PizzaTypeController : ControllerBase
         var command = new ImportPizzaTypesCommand(records);
         var result = await _sender.Send(command);
 
-        return Ok(result);
+        if (result.IsFailure)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                detail: result.Error.Message);
+        }
+
+        return Ok(result.Value);
     }
 
-    private Task<List<PizzaTypeRequest>> GetRecords(MemoryStream memoryStream)
+    private Task<List<ImportPizzaTypesRequest>> GetRecords(MemoryStream memoryStream)
     {
-        var records = new List<PizzaTypeRequest>();
+        var records = new List<ImportPizzaTypesRequest>();
         using (var stream = new StreamReader(memoryStream))
         using (var sepReader = Sep.Reader().From(stream))
         {
             foreach (var row in sepReader)
             {
-                var model = new PizzaTypeRequest
-                {
-                    Id = row[0].ToString(),
-                    Name = row[1].ToString(),
-                    Category = row[2].ToString(),
-                    Ingredients = row[3].ToString(),
-                };
+                var model = new ImportPizzaTypesRequest(
+                    UniqueCode: row[0].ToString(),
+                    Name: row[1].ToString(),
+                    Category: row[2].ToString(),
+                    Ingredients: row[3].ToString());
                 records.Add(model);
             }
         }

@@ -6,11 +6,11 @@ namespace Ehrlich.Api.Features.PizzaTypes;
 
 [ApiController]
 [Route("api/[controller]")]
-public partial class PizzaTypeController : ControllerBase
+public partial class PizzaTypesController : ControllerBase
 {
     private readonly ISender _sender;
 
-    public PizzaTypeController(ISender sender)
+    public PizzaTypesController(ISender sender)
     {
         _sender = sender;
     }

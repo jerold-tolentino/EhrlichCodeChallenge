@@ -46,7 +46,7 @@ public partial class PizzasController : ControllerBase
 
                 var model = new ImportPizzasRequest
                 {
-                    //Id = row[0].ToString(),
+                    UniqueCode = row[0].ToString(),
                     Type = row[1].ToString(),
                     Size = size,
                     Price = Convert.ToDecimal(row[3].ToString()),
