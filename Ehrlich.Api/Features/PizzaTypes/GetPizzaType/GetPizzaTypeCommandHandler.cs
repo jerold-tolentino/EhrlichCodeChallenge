@@ -30,8 +30,6 @@ public class GetPizzaTypeCommandHandler : IRequestHandler<GetPizzaTypeQuery, Res
             return Result.Failure<GetPizzaTypeResponse>(PizzaTypeErrors.NotFound);
         }
 
-        var pizzas = await _dbContext.Pizzas.Where(p => p.Type == pizzaType).ToListAsync();
-
         var response = new GetPizzaTypeResponse(
             Id: pizzaType.Id,
             Name: pizzaType.Name,
