@@ -10,7 +10,7 @@ namespace Ehrlich.Api.Features.PizzaTypes;
 
 public partial class PizzaTypesController : ControllerBase
 {
-    [HttpPost]
+    [HttpPost("[action]")]
     public async Task<IActionResult> ImportPizzaTypes([FromForm(Name = "File")] IFormFile file)
     {
         if (file == null || file.Length == 0)

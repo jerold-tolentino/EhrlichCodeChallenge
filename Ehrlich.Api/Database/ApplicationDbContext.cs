@@ -30,6 +30,7 @@ namespace Ehrlich.Api.Database
         public DbSet<PizzaCategory> PizzaCategories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderedItem> OrderedItems { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
 
     }
 }

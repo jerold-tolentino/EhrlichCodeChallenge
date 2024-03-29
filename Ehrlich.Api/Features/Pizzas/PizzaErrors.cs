@@ -1,8 +1,8 @@
 ﻿using Ehrlich.Api.Shared;
 
-namespace Ehrlich.Api.Features.Pizzas.ImportPizzas;
+namespace Ehrlich.Api.Features.Pizzas;
 
-public record PizzaErrors(string Code, string Message) : Error(Code, Message)
+public static class PizzaErrors
 {
     public static readonly Error PizzaTypeNotFound = new("Error.PizzaTypeNotFound", "Pizza Type does not exist");
     public static readonly Error PizzaAlreadyExist = new("Error.PizzaAlreadyExist", "Pizza with similar Id already exist");
