@@ -4,7 +4,7 @@ This repository contains an ASP.NET Core Web API project using Vertical Slice Ar
 
 ## Prerequisites
 
-- [.NET SDK](https://dotnet.microsoft.com/download) (version X.X.X or higher)
+- [.NET SDK](https://dotnet.microsoft.com/download) (version 8 or higher)
 - [Visual Studio](https://visualstudio.microsoft.com/downloads/) or any other preferred code editor
 - [Git](https://git-scm.com/downloads) (optional, if you prefer cloning via Git)
 
@@ -24,6 +24,12 @@ cd your-repo
 
 ```bash
 dotnet restore
+```
+
+4. **Apply Migrations:**
+
+```bash
+dotnet ef database update
 ```
 
 
