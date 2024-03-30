@@ -29,6 +29,7 @@ public class ImportOrderedItemsCommandHandler : IRequestHandler<ImportOrderedIte
                 }
                 var pizzas = _dbContext.Pizzas.ToList();
                 var orders = _dbContext.Orders.ToList();
+                var existingOrderedItems = _dbContext.OrderedItems.ToList();
 
                 var orderedItems = new List<OrderedItem>();
 
@@ -46,9 +47,15 @@ public class ImportOrderedItemsCommandHandler : IRequestHandler<ImportOrderedIte
                         return Result.Failure<int>(OrderErrors.PizzatypeNotFound);
                     }
 
+                    var existingOrder = existingOrderedItems.Find(p => p.OrderedItemId == row.Id);
+                    if (existingOrder is not null)
+                    {
+                        continue;
+                    }
+
                     var orderedItem = new OrderedItem
                     {
-                        Id = row.Id,
+                        OrderedItemId = row.Id,
                         Order = order,
                         Pizza = pizza
                     };
