@@ -1,4 +1,6 @@
-﻿using Ehrlich.Api.Database;
+﻿using EFCore.BulkExtensions;
+using Ehrlich.Api.Database;
+using Ehrlich.Api.Entities;
 using Ehrlich.Api.Features.PizzaTypes.DeletePizzaType;
 using Ehrlich.Api.Features.PizzaTypes.GetPizzaType;
 using Ehrlich.Api.Shared;
